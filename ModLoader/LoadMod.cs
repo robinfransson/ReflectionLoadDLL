@@ -12,7 +12,7 @@ namespace LoadDLL
         private List<IMod> LoadedMods = new();
 
 
-        public List<IMod> GetExternObjs()
+        public List<IMod> GetInstalledMods()
         {
             LoadFileNames();
             return LoadedMods;
@@ -50,27 +50,16 @@ namespace LoadDLL
         private IEnumerable<string> GetDlls()
         {
             var pwd = Directory.GetCurrentDirectory();
-            var modFile = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\mods.txt");
-            var mods = modFile.Where(line => line.StartsWith("mod=")).Select(line => Directory.GetCurrentDirectory() + "\\mods\\" + line.Split("mod=")[1] + ".dll").ToList();
-            bool done = false;
-            int i = 0;
-            while (!done)
+            var mods = Directory.GetFiles(pwd + "\\mods").Where(file => file.EndsWith(".dll")).ToList();
+            for(int i = 0; i < mods.Count(); i++)
             {
-                string current = mods[i];
-                if (!FileExists(current))
+                string current = mods.ElementAt(i);
+                if (!File.Exists(current))
                     mods.Remove(current);
-                if (mods.Count == i + 1)
-                    done = !done;
             }
             return mods;
         }
 
-        private bool FileExists(string file)
-        {
-            var exists = File.Exists(file);
-            return exists;
-
-        }
 
     
 

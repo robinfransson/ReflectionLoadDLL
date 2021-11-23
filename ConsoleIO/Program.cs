@@ -12,7 +12,7 @@ namespace TestModLoad
     {
         static void Main(string[] args)
         {
-            List<IMod> mods = new LoadMods().GetExternObjs();
+            List<IMod> mods = new LoadMods().GetInstalledMods();
 
             foreach (var mod in mods)
             {
@@ -21,8 +21,11 @@ namespace TestModLoad
 
             while (true)
             {
-                //Console.WriteLine("Enter a mod to invoke: ");
-                var mod = mods.First();
+                Console.WriteLine("Enter a mod to invoke: ");
+                var mod = mods.FirstOrDefault(x => x.ModName == Console.ReadLine());
+                if (mod is null)
+                    continue;
+
                 Console.WriteLine("Enter a method to invoke: ");
                 Console.WriteLine(AvailableMethods(mod));
                 var method = Console.ReadLine();
@@ -55,7 +58,7 @@ namespace TestModLoad
         private static string AvailableMethods(IMod mod)
         {
             var methods = mod.GetType().GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
-            return string.Join("\n", methods.Where(x => !x.Name.StartsWith("get_") || !x.Name.StartsWith("set_")).Select(x => x.Name));
+            return string.Join("\n", methods.Select(x => x.Name));
         }
 
         private static IEnumerable<MethodParameterInfo> GetParameters(IMod mod, string method)
