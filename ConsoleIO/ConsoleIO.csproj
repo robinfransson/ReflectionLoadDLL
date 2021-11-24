@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LoadDLL\ModLoader.csproj" />
+    <ProjectReference Include="..\ModLoader\ModLoader.csproj" />
   </ItemGroup>
 
 </Project>

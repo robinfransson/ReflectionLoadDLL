@@ -1,5 +1,4 @@
-﻿using LoadDLL;
-using ModLoader;
+﻿using ModLoader;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -14,15 +13,21 @@ namespace TestModLoad
         {
             List<IMod> mods = new LoadMods().GetInstalledMods();
 
+            if (!mods.Any())
+                Exit();
+
             foreach (var mod in mods)
             {
                 mod.OnLoad();
             }
 
+
+
             while (true)
             {
                 Console.WriteLine("Enter a mod to invoke: ");
-                var mod = mods.FirstOrDefault(x => x.ModName == Console.ReadLine());
+                var modToLoad = Console.ReadLine();
+                var mod = mods.FirstOrDefault(x => x.ModName == modToLoad);
                 if (mod is null)
                     continue;
 
@@ -53,6 +58,13 @@ namespace TestModLoad
                     Console.WriteLine(RunFunction(mod, method, null));
                 }
             }
+        }
+
+        private static void Exit()
+        {
+            Console.WriteLine("No mods in mod folder.. exiting");
+
+            Environment.Exit(0);
         }
 
         private static string AvailableMethods(IMod mod)

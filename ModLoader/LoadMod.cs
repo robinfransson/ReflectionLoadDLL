@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace LoadDLL
+namespace ModLoader
 {
     public class LoadMods
     {
@@ -22,7 +22,7 @@ namespace LoadDLL
         {
             var dllFiles = GetDlls();
             List<Assembly> assemblies = new();
-            foreach(var name in dllFiles)
+            foreach (var name in dllFiles)
             {
                 var assembly = Assembly.LoadFile(name);
                 assemblies.Add(assembly);
@@ -34,7 +34,7 @@ namespace LoadDLL
 
         private void CreateInstances(List<Assembly> assemblies)
         {
-            foreach(var dll in assemblies)
+            foreach (var dll in assemblies)
             {
                 var name = dll.GetName().Name;
                 IMod modObj = dll.CreateInstance(name + ".Main") as IMod;
@@ -50,6 +50,11 @@ namespace LoadDLL
         private IEnumerable<string> GetDlls()
         {
             var pwd = Directory.GetCurrentDirectory();
+
+
+            if (!Directory.Exists(pwd + "\\mods"))
+                Directory.CreateDirectory(pwd + "\\mods");
+
             var mods = Directory.GetFiles(pwd + "\\mods").Where(file => file.EndsWith(".dll")).ToList();
             for(int i = 0; i < mods.Count(); i++)
             {
