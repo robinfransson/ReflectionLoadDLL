@@ -1,4 +1,5 @@
-﻿using ModLoader;
+﻿using ConsoleIO;
+using ModLoader;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -12,51 +13,59 @@ namespace TestModLoad
         static void Main(string[] args)
         {
             List<IMod> mods = new LoadMods().GetInstalledMods();
+            IHelper helper = new Helper();
 
             if (!mods.Any())
                 Exit();
 
             foreach (var mod in mods)
             {
-                mod.OnLoad();
+                mod.OnLoad(helper);
             }
 
 
 
+            //while (true)
+            //{
+            //    Console.WriteLine("Enter a mod to invoke: ");
+            //    var modToLoad = Console.ReadLine();
+            //    var mod = mods.FirstOrDefault(x => x.ModName == modToLoad);
+            //    if (mod is null)
+            //        continue;
+
+            //    Console.WriteLine("Enter a method to invoke: ");
+            //    Console.WriteLine(AvailableMethods(mod));
+            //    var method = Console.ReadLine();
+            //    var parameters = GetParameters(mod, method);
+            //    if (parameters is null)
+            //        continue;
+            //    if (parameters.Any())
+            //    {
+            //        int stopAt = parameters.Count();
+            //        dynamic val = new ExpandoObject();
+
+            //        val.list = new List<dynamic>();
+            //        for (int i = 0; i < stopAt; i++)
+            //        {
+            //            var parameter = parameters.ElementAt(i);
+            //            Console.WriteLine("Enter the parameter for " + parameter.Name + " (" + parameter.ParameterType.ToString() + ")");
+            //            val.list.Add(Convert.ChangeType(Console.ReadLine(), parameter.ParameterType));
+            //        }
+            //        val.list = val.list.ToArray();
+            //        Console.WriteLine(RunFunction(mod, method, val.list));
+
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine(RunFunction(mod, method, null));
+            //    }
+            //}
+
             while (true)
             {
-                Console.WriteLine("Enter a mod to invoke: ");
-                var modToLoad = Console.ReadLine();
-                var mod = mods.FirstOrDefault(x => x.ModName == modToLoad);
-                if (mod is null)
-                    continue;
-
-                Console.WriteLine("Enter a method to invoke: ");
-                Console.WriteLine(AvailableMethods(mod));
-                var method = Console.ReadLine();
-                var parameters = GetParameters(mod, method);
-                if (parameters is null)
-                    continue;
-                if (parameters.Any())
-                {
-                    int stopAt = parameters.Count();
-                    dynamic val = new ExpandoObject();
-
-                    val.list = new List<dynamic>();
-                    for (int i = 0; i < stopAt; i++)
-                    {
-                        var parameter = parameters.ElementAt(i);
-                        Console.WriteLine("Enter the parameter for " + parameter.Name + " (" + parameter.ParameterType.ToString() + ")");
-                        val.list.Add(Convert.ChangeType(Console.ReadLine(), parameter.ParameterType));
-                    }
-                    val.list = val.list.ToArray();
-                    Console.WriteLine(RunFunction(mod, method, val.list));
-
-                }
-                else
-                {
-                    Console.WriteLine(RunFunction(mod, method, null));
-                }
+                KeyboardEvent keyEvent = new();
+                keyEvent.Key = Console.ReadKey(true).Key;
+                helper.OnKeyPress(keyEvent);
             }
         }
 

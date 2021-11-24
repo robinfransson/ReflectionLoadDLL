@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ModLoader
 {
-    public interface IMod
+    public class KeyboardEvent
     {
-
-        string ModName { get; }
-        void OnLoad(IHelper helper);
-        void Test();
+        public ConsoleKey Key { get; set; }
     }
 }

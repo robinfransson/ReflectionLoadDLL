@@ -7,15 +7,21 @@ namespace MyTestMod
     {
         public string ModName { get; } = "MyTestMod"; 
 
-        public void OnLoad()
-        {
-            Console.WriteLine($"Loaded {ModName}");
-            Console.WriteLine(AnotherClass.AnotherMethod());
-        }
-
         public void Test()
         {
             Console.WriteLine("Test invoked!");
+        }
+
+        public void OnKeyPress(KeyboardEvent e)
+        {
+            if (e.Key == ConsoleKey.A)
+                Console.WriteLine(AddNumbers(5, 7));
+
+            else if(e.Key == ConsoleKey.M)
+                Console.WriteLine("Funkar också");
+
+            else if(e.Key == ConsoleKey.Y)
+                Console.WriteLine(AnotherClass.AnotherMethod());
         }
 
         public int AddNumbers(int a, int b)
@@ -23,5 +29,10 @@ namespace MyTestMod
             return a + b;
         }
 
+        public void OnLoad(IHelper helper)
+        {
+            Console.WriteLine($"Loaded {ModName}");
+            helper.OnKeyPress += OnKeyPress;
+        }
     }
 }
